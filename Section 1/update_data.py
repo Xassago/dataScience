@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import json
-import urllib.request,urllib.parse
+import urllib.request, urllib.parse
 import os
 import math
 
@@ -19,11 +19,11 @@ import math
 # pure_case_num = 42787
 # pure_caseid_num = 882
 
-f = open('test_data.json',encoding='utf-8')
+f = open('data/test_data.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 
-classified_test = {"排序算法":{},"数字操作":{},"数组":{},"树结构":{},"图结构":{},"查找算法":{},"字符串":{},"线性表":{}}
+classified_test = {"排序算法": {}, "数字操作": {}, "数组": {}, "树结构": {}, "图结构": {}, "查找算法": {}, "字符串": {}, "线性表": {}}
 case_test = {}
 
 student_num = 0
@@ -34,9 +34,9 @@ for value in data.values():
     for case in value["cases"]:
         case_num += 1
         cgry = classified_test[case["case_type"]]
-        if cgry.get(case["case_id"],0)==0:
+        if cgry.get(case["case_id"], 0) == 0:
             cgry[case["case_id"]] = []
-        if case_test.get(case["case_id"],0)==0:
+        if case_test.get(case["case_id"], 0) == 0:
             case_test[case["case_id"]] = []
         new_case = {}
         new_case["user_id"] = user_id
@@ -52,14 +52,14 @@ print("case_num = " + str(case_num))
 
 key_num = 0
 for key in classified_test.keys():
-    key_num+=1
+    key_num += 1
 print("key_num = " + str(key_num))
 
-with open('classified_data.json', 'w',encoding='utf-8') as w:
-    json.dump(classified_test,w,ensure_ascii=False,indent=4)
+with open('data/classified_data.json', 'w', encoding='utf-8') as w:
+    json.dump(classified_test, w, ensure_ascii=False, indent=4)
 
-with open('case_data.json', 'w',encoding='utf-8') as w:
-    json.dump(case_test,w,ensure_ascii=False,indent=4)
+with open('data/case_data.json', 'w', encoding='utf-8') as w:
+    json.dump(case_test, w, ensure_ascii=False, indent=4)
 
 # 重新读取json文件检测是否有数据传输失真
 # student_num = 271
@@ -70,7 +70,7 @@ with open('case_data.json', 'w',encoding='utf-8') as w:
 # classified_case_num = 42787
 # caseid_num_allowing_dupid = 933
 # caseid_num_not_allowing_dupid = 882
-with open('classified_data.json', 'r',encoding='utf-8') as r:
+with open('data/classified_data.json', 'r', encoding='utf-8') as r:
     check_data = json.load(r)
     new_key_num = 0
     classified_case_num = 0
@@ -103,16 +103,16 @@ with open('classified_data.json', 'r',encoding='utf-8') as r:
     print("caseid_num_allowing_dupid = " + str(caseid_num_allowing_dupid))
     print("caseid_num_not_allowing_dupid = " + str(caseid_num_not_allowing_dupid))
     name_length = len(caseid_names)
-    for i in range(math.ceil(name_length/10)):
-        tmp_list = [caseid_names[i*10+j] for j in range(10) if i*10+j<name_length]
+    for i in range(math.ceil(name_length / 10)):
+        tmp_list = [caseid_names[i * 10 + j] for j in range(10) if i * 10 + j < name_length]
         print(tmp_list)
 
 # 重新读取json文件检测是否有数据传输失真
 # pure_case_num = 42787
 # pure_caseid_num = 882
-with open('case_data.json', 'r',encoding='utf-8') as r:
+with open('data/case_data.json', 'r', encoding='utf-8') as r:
     check_data = json.load(r)
     pure_caseid_num = len([i for i in check_data.keys()])
-    pure_case_num = sum(map(len,[i for i in check_data.values()]))
+    pure_case_num = sum(map(len, [i for i in check_data.values()]))
     print("pure_case_num = " + str(pure_case_num))
     print("pure_caseid_num = " + str(pure_caseid_num))

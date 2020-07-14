@@ -2,7 +2,7 @@
 import json
 import math
 
-f = open('furtherScore.json', encoding='utf-8')
+f = open('data/furtherScore.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 
