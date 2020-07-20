@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
 """验证 furtherScore.json 数据是否正态"""
 import json
 import math
