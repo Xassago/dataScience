@@ -6,6 +6,9 @@ import urllib.request, urllib.parse
 import os
 import math
 
+# 此文件先跑，再跑calculate,最后NDT
+# 此文件更新classified_data.json与case_data.json
+
 # updata_time为到1970.1.1 00:00:00 的毫秒数
 # 不同类别的case_id会重复
 # student_num = 271
@@ -54,6 +57,7 @@ key_num = 0
 for key in classified_test.keys():
     key_num += 1
 print("key_num = " + str(key_num))
+print()
 
 with open('data/classified_data.json', 'w', encoding='utf-8') as w:
     json.dump(classified_test, w, ensure_ascii=False, indent=4)
@@ -70,6 +74,7 @@ with open('data/case_data.json', 'w', encoding='utf-8') as w:
 # classified_case_num = 42787
 # caseid_num_allowing_dupid = 933
 # caseid_num_not_allowing_dupid = 882
+print("检验classified_data.json的内容")
 with open('data/classified_data.json', 'r', encoding='utf-8') as r:
     check_data = json.load(r)
     new_key_num = 0
@@ -106,13 +111,15 @@ with open('data/classified_data.json', 'r', encoding='utf-8') as r:
     for i in range(math.ceil(name_length / 10)):
         tmp_list = [caseid_names[i * 10 + j] for j in range(10) if i * 10 + j < name_length]
         print(tmp_list)
+print()
 
 # 重新读取json文件检测是否有数据传输失真
 # pure_case_num = 42787
 # pure_caseid_num = 882
+print("检验case_data.json的内容")
 with open('data/case_data.json', 'r', encoding='utf-8') as r:
     check_data = json.load(r)
     pure_caseid_num = len([i for i in check_data.keys()])
     pure_case_num = sum(map(len, [i for i in check_data.values()]))
-    print("pure_case_num = " + str(pure_case_num))
-    print("pure_caseid_num = " + str(pure_caseid_num))
+    print("pure_case_num（test_data中所有做题记录的数量） = " + str(pure_case_num))
+    print("pure_caseid_num（不重复的caseid的数量） = " + str(pure_caseid_num))

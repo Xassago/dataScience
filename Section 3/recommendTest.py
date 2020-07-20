@@ -4,7 +4,10 @@
 import json
 import math
 
-f = open('data/demo.json',encoding='utf-8')
+# 先跑get，再跑此文件
+# 此文件完成推荐代码功能
+
+f = open('data/userCase.json',encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 INVALID = "*"
@@ -176,7 +179,10 @@ def getTest(cases,type,userScore,positionData):
                     tmpUserIds.append(case["user_id"])
                     scores.append(getScore(case, positionData))
             avgUserScores[testId] = sum(scores)/len(scores) if scores else 0
-        newTests = sorted(avgUserScores.keys(),key=lambda x:abs(avgUserScores[x]-userScore))
+        newTests = sorted(avgUserScores.keys(),key=lambda x:abs(avgUserScores[x]-userScore)) #未做过的题目按平均掌握值与用户掌握值的差值绝对值从小到大排序
+        print("userScore（用户在该题型上的掌握值）:", userScore)
+        print("testIds not tried",
+              sorted(avgUserScores.items(), key=lambda x: abs(x[1]-userScore)))
     if caseIds: #对做过的题目进行排序
         casesClean = []
         tmpCaseIds = []
@@ -184,12 +190,14 @@ def getTest(cases,type,userScore,positionData):
             if case["case_id"] not in tmpCaseIds:  # 可能有重复
                 tmpCaseIds.append(case["case_id"])
                 casesClean.append(case)
-        oldTests = [i["case_id"] for i in sorted(casesClean,key=lambda x:getScore(x,positionData))]
+        oldTests = [i["case_id"] for i in sorted(casesClean,key=lambda x:getScore(x,positionData))] #已做过的题目按掌握值从小到大排序
+        print("testIds tried",sorted(map(lambda x:(x["case_id"],getScore(x,positionData)),casesClean),key=lambda x:x[1]))
     return (newTests,oldTests)
 
 cases=data["cases"]
 type=data["type"]
 score=float('inf')
+print("用户ID:",data["user_id"],";指定推荐题目类型:",type,end="")
 
 #判断type并进行计算,在结束后type表示即将返回的题目的type,score为该type下的得分
 position_data = getPositionData()
@@ -201,9 +209,12 @@ if type==UNDEFINED:
             type = value
 else:
     score = getUserScore(cases,type,position_data)
+print(";最终推荐题目类型:",type)
+print()
 
-
+# 获取可推荐题目的列表
 tests_available = getTest(cases,type,score,position_data)
+print()
 print("[duplicate]" if len(tests_available[0])!=len(set(tests_available[0])) else "[not duplicate]",end="")
 print("testIds not tried available in order:",tests_available[0])
 print("[duplicate]" if len(tests_available[1])!=len(set(tests_available[1])) else "[not duplicate]",end="")
@@ -213,7 +224,7 @@ print("nest recommended testId:",all_tests_available[0] if all_tests_available e
 print()
 
 # 罗列已经做过的题目(去重后)
-print("all tests tried are listed below:")
+print("all tests tried are listed below(duplicate one removed):")
 test_data = json.load(open('../Section 1/data/test_data.json', 'r', encoding='utf-8'))
 userCases = test_data[str(data["user_id"])]["cases"]
 casesClean = []

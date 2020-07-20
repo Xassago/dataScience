@@ -6,6 +6,9 @@
 
 import json
 
+# 先跑此文件，再跑recommend
+# 此文件获取推荐代码所需的条件（用户的userId和题目的type），更新userCase.json
+
 data = json.load(open('../Section 1/data/test_data.json', 'r', encoding='utf-8'))
 INVALID = "*"
 UNDEFINED = "undefined"
@@ -26,8 +29,13 @@ else:
 
 # 为userId和type赋值
 if auto:
-    # 待写
-    print("automatical input not provided now")
+    # 待改进
+    userId = "3544"
+    type = UNDEFINED
+
+    userData = data.get(userId, INVALID)
+    userData["type"] = type
+    done = True
 else:
     while True:
         userId = input("input userId here: ")
@@ -61,7 +69,7 @@ else:
 
 # 加载demo.json
 if done:
-    with open('data/demo.json', 'w', encoding='utf-8') as w:
+    with open('data/userCase.json', 'w', encoding='utf-8') as w:
         json.dump(userData, w, ensure_ascii=False, indent=4)
     print("update demo.json succeeded")
 else:

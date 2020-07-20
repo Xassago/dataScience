@@ -7,6 +7,9 @@ import os
 import math
 import functools
 
+# 先跑update，再跑此文件，最后NDT
+# 此文件计算四个指标（指标用来计算掌握值），更新intermediate_case_data.json
+
 # data_to_process = {"排序算法":{},"数字操作":{},"数组":{},"树结构":{},"图结构":{},"查找算法":{},"字符串":{},"线性表":{}}
 data_to_process = {}
 
@@ -259,7 +262,7 @@ if len(data_to_process.keys())>0:
 print()
 
 intermediate_case_data = {"program_rate":{},"debug_rate":{},"early_success_degree":{},"finish_degree":{}}
-intermediate_classified_data = {}
+# intermediate_classified_data = {}
 intermediate_user_data = {}
 
 case_data_num = {"program_rate":0,"debug_rate":0,"early_success_degree":0,"finish_degree":0}

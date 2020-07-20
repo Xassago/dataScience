@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-"""验证 furtherScore.json 数据是否正态"""
+# 先跑calculate，再跑此文件
+"""验证 masterValue.json 数据是否正态"""
 import json
 import math
 
-f = open('data/furtherScore.json', encoding='utf-8')
+f = open('data/masterValue.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 
@@ -72,10 +73,10 @@ for choose in attributes:  # 依次计算每个指标
     ratio.append((num_valid / num_all) * 100)
 
 print()
-print("各题型数据服从正态分布的比例：")
+print("各题型下学生对所做题掌握值服从正态分布的比例：")
 for i in range(0, 8):
     print(attributes[i] + ": " + str(ratio[i]) + "%")
 
 print()
 avgOfRatio = sum(ratio) / len(ratio)
-print("八种题型服从正态比例的均值：" + str(avgOfRatio) + "%")
+print("八种题型下学生对所做题掌握值服从正态比例的均值：" + str(avgOfRatio) + "%")

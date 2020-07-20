@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+# 先跑updata，再跑calculate，最后此文件
 """验证 intermediate_case_data.json 数据是否正态"""
 import json
 import math

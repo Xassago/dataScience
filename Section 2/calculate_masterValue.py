@@ -4,6 +4,8 @@
 import json
 import math
 
+# 先跑此文件，再跑NDT
+# 此文件计算掌握值，更新masterValue.json
 
 def getPro(case):
     INVALID = "*"
@@ -193,5 +195,5 @@ for userId in dataToWrite.keys():
         dataOfThisType = dataOfThisStudent[caseType]
         if len(dataOfThisType) > 0:
             classifyByType[caseType].append(dataOfThisType)
-with open("data/furtherScore.json", "w", encoding='utf-8') as f:
+with open("data/masterValue.json", "w", encoding='utf-8') as f:
     json.dump(classifyByType, f, ensure_ascii=False, indent=4)
