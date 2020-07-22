@@ -4,8 +4,8 @@
 import json
 import math
 
-# 先跑此文件，再跑NDT
-# 此文件计算掌握值，更新masterValue.json
+# 先跑此文件，再跑produce，最后PCA
+# 此文件计算掌握值，更新masterValuesForCase.json
 
 def getPro(case):
     INVALID = "*"
@@ -168,32 +168,8 @@ for userId in data.keys():
              "num": sorted(num_score), "sort": sorted(sort_score), "tree": sorted(tree_score), "gra": sorted(gra_score)}
     dataToWrite[userId] = direc
 
-# with open("masterValuesForCase.json", "w", encoding='utf-8') as f:
-#     json.dump(dataToWrite, f, ensure_ascii=False, indent=4)
-#     print("加载入文件完成...")
+with open("data/masterValuesForCase.json", "w", encoding='utf-8') as f:
+    json.dump(dataToWrite, f, ensure_ascii=False, indent=4)
+print("加载入文件完成...")
 
-# 输出masterValuesForCase文件中数据的统计情况
-userCount = 0
-for userId in dataToWrite.keys():
-    userCount += 1
-    print(userId,
-          len(dataToWrite[userId]['str']),
-          len(dataToWrite[userId]['line']),
-          len(dataToWrite[userId]['arr']),
-          len(dataToWrite[userId]['find']),
-          len(dataToWrite[userId]['num']),
-          len(dataToWrite[userId]['sort']),
-          len(dataToWrite[userId]['tree']),
-          len(dataToWrite[userId]['gra']), )
-print("共计" + str(userCount) + "个学生")
 
-# 对masterValuesForCase进一步按照题型分类，每个题型下对应不同学生在该题型上的数据
-classifyByType = {'str': [], 'line': [], 'arr': [], 'find': [], 'num': [], 'sort': [], 'tree': [], 'gra': []}
-for userId in dataToWrite.keys():
-    dataOfThisStudent = dataToWrite[userId]
-    for caseType in dataOfThisStudent.keys():
-        dataOfThisType = dataOfThisStudent[caseType]
-        if len(dataOfThisType) > 0:
-            classifyByType[caseType].append(dataOfThisType)
-with open("data/masterValue.json", "w", encoding='utf-8') as f:
-    json.dump(classifyByType, f, ensure_ascii=False, indent=4)
