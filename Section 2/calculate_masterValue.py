@@ -4,6 +4,7 @@
 import json
 import math
 
+
 # 先跑此文件，再跑NDT
 # 此文件计算掌握值，更新masterValue.json
 
@@ -13,7 +14,7 @@ def getPro(case):
     if len(records) >= 4:
         time_span = records[-1]["upload_time"] - records[0]["upload_time"]
         to_cal = (max([i["score"] for i in records]) / 100) / (time_span / 1000 / 60 / 60) if time_span != 0 else -1
-        programRate = math.log(to_cal+1, math.e) if to_cal > 0 else INVALID
+        programRate = math.log(to_cal + 1, math.e) if to_cal > 0 else INVALID
         if max([i["score"] for i in records]) == 0:
             programRate = 0
     else:
@@ -38,7 +39,7 @@ def getDebug(case):
                 last_pair = [records[i + 1]["score"], records[i + 1]["upload_time"]]
             elif records[i + 1]["score"] == last_pair[0]:
                 last_pair[1] = records[i + 1]["upload_time"]
-        debugRate = math.log(math.sqrt(debug_rate / up_times)+1,
+        debugRate = math.log(math.sqrt(debug_rate / up_times) + 1,
                              math.e) if up_times > 0 else INVALID
         if max([i["score"] for i in records]) == 0:
             debugRate = 0
@@ -57,7 +58,7 @@ def getEarly(case):
             last_success_degree = max(last_success_degree, records[i + 1]["score"] / 100)
             early_success_degree += last_success_degree
         to_cal = early_success_degree / len(records) if len(records) > 0 else -1
-        early_success_degree = math.log(to_cal+1, math.e) if to_cal > 0 else INVALID
+        early_success_degree = math.log(to_cal + 1, math.e) if to_cal > 0 else INVALID
         if max([i["score"] for i in records]) == 0:
             early_success_degree = 0
     else:
@@ -74,11 +75,11 @@ def getFinish(case):
         for i in range(len(records) - 1):
             max_score = max(max_score, records[i + 1]["score"])
             finish_degree += (max_score / 100) / (
-                        (records[i + 1]["upload_time"] - records[0]["upload_time"]) / 1000 / 60 / 60)
+                    (records[i + 1]["upload_time"] - records[0]["upload_time"]) / 1000 / 60 / 60)
         to_cal = finish_degree / (len(records) - 1) if len(records) > 1 else -1
-        finish_degree = math.log(to_cal+1, math.e) if to_cal > 0 else INVALID
+        finish_degree = math.log(to_cal + 1, math.e) if to_cal > 0 else INVALID
         if max([i["score"] for i in records]) == 0:
-            finish_degree  = 0
+            finish_degree = 0
 
     else:
         finish_degree = INVALID

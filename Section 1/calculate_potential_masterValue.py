@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import json
-import urllib.request,urllib.parse
+import urllib.request, urllib.parse
 import os
 import math
 import functools
@@ -13,7 +13,7 @@ import functools
 # data_to_process = {"排序算法":{},"数字操作":{},"数组":{},"树结构":{},"图结构":{},"查找算法":{},"字符串":{},"线性表":{}}
 data_to_process = {}
 
-f = open('data/case_data.json',encoding='utf-8')
+f = open('data/case_data.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 pure_case_num = 0
@@ -24,7 +24,7 @@ for name in data.keys():
     for case in cases:
         data_to_process[name][case["user_id"]] = {}
 print("pure_case_num = " + str(pure_case_num))
-print("data_to_process结构：",data_to_process)
+print("data_to_process结构：", data_to_process)
 print()
 
 INVALID = "*"
@@ -35,42 +35,44 @@ for caseid in data.keys():
     cases = data[caseid]
     for case in cases:
         records = case["upload_records"]
-        if len(records)>= 4:
+        if len(records) >= 4:
             time_span = records[-1]["upload_time"] - records[0]["upload_time"]
-            to_cal = (max([i["score"] for i in records])/100)/(time_span/1000/60/60) if time_span!=0 else -1 #只考虑大于0的数据，单位：h^(-1)
-            data_to_process[caseid][case["user_id"]]["program_rate"] = math.log(to_cal+1,math.e) if to_cal>0 else INVALID
-            if max([i["score"] for i in records])==0:
+            to_cal = (max([i["score"] for i in records]) / 100) / (
+                        time_span / 1000 / 60 / 60) if time_span != 0 else -1  # 只考虑大于0的数据，单位：h^(-1)
+            data_to_process[caseid][case["user_id"]]["program_rate"] = math.log(to_cal + 1,
+                                                                                math.e) if to_cal > 0 else INVALID
+            if max([i["score"] for i in records]) == 0:
                 data_to_process[caseid][case["user_id"]]["program_rate"] = 0
         else:
             data_to_process[caseid][case["user_id"]]["program_rate"] = INVALID
 
-
 # debug_rate
 # 理由：攻克用例速度越快越好
-valid_interval = 1*60*60*1000
+valid_interval = 1 * 60 * 60 * 1000
 for caseid in data.keys():
     cases = data[caseid]
     for case in cases:
         records = case["upload_records"]
-        if len(records)>= 3:
+        if len(records) >= 3:
             debug_rate = 0
-            last_pair = [records[0]["score"],records[0]["upload_time"]]
+            last_pair = [records[0]["score"], records[0]["upload_time"]]
             up_times = 0
-            for i in range(len(records)-1):
-                if records[i+1]["score"] > last_pair[0] :
-                    if (records[i + 1]["upload_time"] - last_pair[1]) < valid_interval: #只考虑在一定时间范围内增长的分数，否则不算做debug范畴
-                        debug_rate += math.pow(((records[i+1]["score"]-last_pair[0])/100)/((records[i+1]["upload_time"]-last_pair[1])/1000/60/60),2)
+            for i in range(len(records) - 1):
+                if records[i + 1]["score"] > last_pair[0]:
+                    if (records[i + 1]["upload_time"] - last_pair[1]) < valid_interval:  # 只考虑在一定时间范围内增长的分数，否则不算做debug范畴
+                        debug_rate += math.pow(((records[i + 1]["score"] - last_pair[0]) / 100) / (
+                                    (records[i + 1]["upload_time"] - last_pair[1]) / 1000 / 60 / 60), 2)
                         up_times += 1
                     last_pair = [records[i + 1]["score"], records[i + 1]["upload_time"]]
-                elif records[i+1]["score"] == last_pair[0]:
+                elif records[i + 1]["score"] == last_pair[0]:
                     last_pair[1] = records[i + 1]["upload_time"]
-            to_cal = math.sqrt(debug_rate/up_times) if up_times>0 else -1 #只考虑大于0的数据，单位：h^(-1)
-            data_to_process[caseid][case["user_id"]]["debug_rate"] = math.log(to_cal+1,math.e) if to_cal>0 else INVALID
-            if max([i["score"] for i in records])==0:
+            to_cal = math.sqrt(debug_rate / up_times) if up_times > 0 else -1  # 只考虑大于0的数据，单位：h^(-1)
+            data_to_process[caseid][case["user_id"]]["debug_rate"] = math.log(to_cal + 1,
+                                                                              math.e) if to_cal > 0 else INVALID
+            if max([i["score"] for i in records]) == 0:
                 data_to_process[caseid][case["user_id"]]["debug_rate"] = 0
         else:
             data_to_process[caseid][case["user_id"]]["debug_rate"] = INVALID
-
 
 # early_success_degree
 # 理由：分数提高越早越好
@@ -78,7 +80,7 @@ for caseid in data.keys():
     cases = data[caseid]
     for case in cases:
         records = case["upload_records"]
-        if len(records)>= 4:
+        if len(records) >= 4:
             # 此为折线下面积所占比例的计算方法
             # early_success_degree = 0
             # last_success_degree = records[0]["score"]/100
@@ -104,13 +106,13 @@ for caseid in data.keys():
             for i in range(len(records) - 1):
                 last_success_degree = max(last_success_degree, records[i + 1]["score"] / 100)
                 early_success_degree += last_success_degree
-            to_cal = early_success_degree / len(records) if len(records)>0 else -1 #只考虑大于0的数据，单位：1
-            data_to_process[caseid][case["user_id"]]["early_success_degree"] = math.log(to_cal+1,math.e) if to_cal>0 else INVALID
-            if max([i["score"] for i in records])==0:
+            to_cal = early_success_degree / len(records) if len(records) > 0 else -1  # 只考虑大于0的数据，单位：1
+            data_to_process[caseid][case["user_id"]]["early_success_degree"] = math.log(to_cal + 1,
+                                                                                        math.e) if to_cal > 0 else INVALID
+            if max([i["score"] for i in records]) == 0:
                 data_to_process[caseid][case["user_id"]]["early_success_degree"] = 0
         else:
             data_to_process[caseid][case["user_id"]]["early_success_degree"] = INVALID
-
 
 # finish_degree
 # 理由：题目完成度越高越好
@@ -119,20 +121,21 @@ for caseid in data.keys():
     cases = data[caseid]
     for case in cases:
         records = case["upload_records"]
-        if len(records)>= 4:
+        if len(records) >= 4:
             finish_degree = 0
             max_score = records[0]["score"]
             for i in range(len(records) - 1):
-                max_score = max(max_score,records[i+1]["score"])
-                finish_degree += (max_score/100)/((records[i+1]["upload_time"]-records[0]["upload_time"])/1000/60/60)
-            to_cal = finish_degree/(len(records)-1) if len(records)>1 else -1 # 单位：h^(-1)
-            data_to_process[caseid][case["user_id"]]["finish_degree"] = math.log(to_cal+1, math.e) if to_cal>0 else INVALID
-            if max([i["score"] for i in records])==0:
+                max_score = max(max_score, records[i + 1]["score"])
+                finish_degree += (max_score / 100) / (
+                            (records[i + 1]["upload_time"] - records[0]["upload_time"]) / 1000 / 60 / 60)
+            to_cal = finish_degree / (len(records) - 1) if len(records) > 1 else -1  # 单位：h^(-1)
+            data_to_process[caseid][case["user_id"]]["finish_degree"] = math.log(to_cal + 1,
+                                                                                 math.e) if to_cal > 0 else INVALID
+            if max([i["score"] for i in records]) == 0:
                 data_to_process[caseid][case["user_id"]]["finish_degree"] = 0
 
         else:
             data_to_process[caseid][case["user_id"]]["finish_degree"] = INVALID
-
 
 ma = -float('inf')
 mi = float('inf')
@@ -146,9 +149,9 @@ for caseid in data_to_process.values():
             avg += case["program_rate"]
             mi = min(mi, case["program_rate"])
 avg /= num
-print("program_rate max for all caseids:",ma)
-print("program_rate min for all caseids:",mi)
-print("program_rate avg for all caseids:",avg)
+print("program_rate max for all caseids:", ma)
+print("program_rate min for all caseids:", mi)
+print("program_rate avg for all caseids:", avg)
 
 ma = -float('inf')
 mi = float('inf')
@@ -162,9 +165,9 @@ for caseid in data_to_process.values():
             avg += case["debug_rate"]
             mi = min(mi, case["debug_rate"])
 avg /= num
-print("debug_rate max for all caseids:",ma)
-print("debug_rate min for all caseids:",mi)
-print("debug_rate avg for all caseids:",avg)
+print("debug_rate max for all caseids:", ma)
+print("debug_rate min for all caseids:", mi)
+print("debug_rate avg for all caseids:", avg)
 
 ma = -float('inf')
 mi = float('inf')
@@ -178,9 +181,9 @@ for caseid in data_to_process.values():
             avg += case["early_success_degree"]
             mi = min(mi, case["early_success_degree"])
 avg /= num
-print("early_success_degree max for all caseids:",ma)
-print("early_success_degree min for all caseids:",mi)
-print("early_success_degree avg for all caseids:",avg)
+print("early_success_degree max for all caseids:", ma)
+print("early_success_degree min for all caseids:", mi)
+print("early_success_degree avg for all caseids:", avg)
 
 ma = -float('inf')
 mi = float('inf')
@@ -194,9 +197,9 @@ for caseid in data_to_process.values():
             avg += case["finish_degree"]
             mi = min(mi, case["finish_degree"])
 avg /= num
-print("finish_degree max for all caseids:",ma)
-print("finish_degree min for all caseids:",mi)
-print("finish_degree avg for all caseids:",avg)
+print("finish_degree max for all caseids:", ma)
+print("finish_degree min for all caseids:", mi)
+print("finish_degree avg for all caseids:", avg)
 
 # 打印各caseid的各指标的有效数量
 valid_program_rate = ""
@@ -217,21 +220,21 @@ for caseid in data_to_process.values():
             tmp_early_success_degree += 1
         if case["finish_degree"] != INVALID:
             tmp_finish_degree += 1
-    valid_program_rate += (str(tmp_program_rate)+" ")
-    valid_debug_rate += (str(tmp_debug_rate)+" ")
-    valid_early_success_degree += (str(tmp_early_success_degree)+" ")
+    valid_program_rate += (str(tmp_program_rate) + " ")
+    valid_debug_rate += (str(tmp_debug_rate) + " ")
+    valid_early_success_degree += (str(tmp_early_success_degree) + " ")
     valid_finish_degree += (str(tmp_finish_degree) + " ")
-print("valid_program_rate_num for each caseid:",valid_program_rate)
-print("valid_debug_rate_num for each caseid:",valid_debug_rate)
-print("valid_early_success_degree_num for each caseid:",valid_early_success_degree)
-print("valid_finish_degree_num for each caseid:",valid_finish_degree)
+print("valid_program_rate_num for each caseid:", valid_program_rate)
+print("valid_debug_rate_num for each caseid:", valid_debug_rate)
+print("valid_early_success_degree_num for each caseid:", valid_early_success_degree)
+print("valid_finish_degree_num for each caseid:", valid_finish_degree)
 print()
 
 print("caseid sample:")
 show_num = 10
 for caseid in data_to_process.keys():
-    show_num-=1
-    print(caseid,":",data_to_process[caseid])
+    show_num -= 1
+    print(caseid, ":", data_to_process[caseid])
     if not show_num:
         break
 print()
@@ -247,7 +250,7 @@ for caseid in data_to_process.keys():
         userCondition = users[userId]
         valid = True
         for value in userCondition:
-            if userCondition[value]==INVALID:
+            if userCondition[value] == INVALID:
                 valid = False
                 break
         if valid:
@@ -255,17 +258,17 @@ for caseid in data_to_process.keys():
     if show_num:
         show_num -= 1
         print(caseid, ":", end="")
-        print("validUserNum/userNum =",validUserNum,"/",userNum,"=",validUserNum/userNum)
-    avg += validUserNum/userNum
-if len(data_to_process.keys())>0:
-    print("avg_validUser_rate:",avg/len(data_to_process.keys()))
+        print("validUserNum/userNum =", validUserNum, "/", userNum, "=", validUserNum / userNum)
+    avg += validUserNum / userNum
+if len(data_to_process.keys()) > 0:
+    print("avg_validUser_rate:", avg / len(data_to_process.keys()))
 print()
 
-intermediate_case_data = {"program_rate":{},"debug_rate":{},"early_success_degree":{},"finish_degree":{}}
+intermediate_case_data = {"program_rate": {}, "debug_rate": {}, "early_success_degree": {}, "finish_degree": {}}
 # intermediate_classified_data = {}
 intermediate_user_data = {}
 
-case_data_num = {"program_rate":0,"debug_rate":0,"early_success_degree":0,"finish_degree":0}
+case_data_num = {"program_rate": 0, "debug_rate": 0, "early_success_degree": 0, "finish_degree": 0}
 for caseid in data_to_process.keys():
     tmp_program_rate = []
     tmp_debug_rate = []
@@ -294,7 +297,7 @@ for caseid in data_to_process.keys():
     if len(tmp_finish_degree) >= filterCondition:
         intermediate_case_data["finish_degree"][caseid] = tmp_finish_degree
         case_data_num["finish_degree"] += 1
-print("intermediate_case_data中各指标的case样本数：",case_data_num)
+print("intermediate_case_data中各指标的case样本数：", case_data_num)
 print()
 
 # 对 intermediate_case_data 中数据排序
@@ -303,11 +306,11 @@ for attribute in intermediate_case_data.keys():
         origin = intermediate_case_data[attribute][caseId]  # 读初始数据
         intermediate_case_data[attribute][caseId] = sorted(origin)  # 排序后重新写入
 
-with open('data/intermediate_case_data.json', 'w',encoding='utf-8') as w:
-    json.dump(intermediate_case_data,w,ensure_ascii=False,indent=4)
+with open('data/intermediate_case_data.json', 'w', encoding='utf-8') as w:
+    json.dump(intermediate_case_data, w, ensure_ascii=False, indent=4)
 
 user_validCase_num = {}
-score_data = {"program_rate":[],"debug_rate":[],"early_success_degree":[],"finish_degree":[]}
+score_data = {"program_rate": [], "debug_rate": [], "early_success_degree": [], "finish_degree": []}
 for caseid in data_to_process.keys():
     users = data_to_process[caseid]
     for userId in users.keys():
@@ -327,20 +330,22 @@ for caseid in data_to_process.keys():
         for value in userCondition.keys():
             if userCondition[value] != INVALID:
                 score_data[value].append(userCondition[value])
-print("拥有有效做题记录（任意一题目的所有指标均有效）的用户:",len([1 for i in user_validCase_num.keys() if i>0]),"/",
-      len(user_validCase_num.keys()),"=",len([1 for i in user_validCase_num.keys() if i>0])/len(user_validCase_num.keys()))
-print("总题目数:",len(data_to_process.keys()))
-print("intermediate_user_data中各用户的有效做题数：",user_validCase_num)
-print("intermediate_user_data中各用户的有效做题比例：",end="{")
+print("拥有有效做题记录（任意一题目的所有指标均有效）的用户:", len([1 for i in user_validCase_num.keys() if i > 0]), "/",
+      len(user_validCase_num.keys()), "=",
+      len([1 for i in user_validCase_num.keys() if i > 0]) / len(user_validCase_num.keys()))
+print("总题目数:", len(data_to_process.keys()))
+print("intermediate_user_data中各用户的有效做题数：", user_validCase_num)
+print("intermediate_user_data中各用户的有效做题比例：", end="{")
 for userId in user_validCase_num.keys():
-    print(str(userId)+":",user_validCase_num[userId]/len(data_to_process.keys()),end=", ")
+    print(str(userId) + ":", user_validCase_num[userId] / len(data_to_process.keys()), end=", ")
 print("}")
 # position_data = {"program_rate":[],"debug_rate":[],"early_success_degree":[],"finish_degree":[]}
 position_data = {}
 for value in score_data.keys():
     data = score_data[value]
-    avg = sum(data)/len(data) if len(data)>0 else INVALID
-    var = math.sqrt(sum(map(lambda x:(x-avg)*(x-avg),data))/(len(data)-1)) #因为取指标时需要满足严苛的筛选，比总数少很多，故认为取出的数据为样本
-    position_data[value] = (avg,var)
-print("各指标的均值与标准差，格式：(avg,var)，",position_data)
+    avg = sum(data) / len(data) if len(data) > 0 else INVALID
+    var = math.sqrt(
+        sum(map(lambda x: (x - avg) * (x - avg), data)) / (len(data) - 1))  # 因为取指标时需要满足严苛的筛选，比总数少很多，故认为取出的数据为样本
+    position_data[value] = (avg, var)
+print("各指标的均值与标准差，格式：(avg,var)，", position_data)
 print()

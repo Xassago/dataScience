@@ -6,6 +6,7 @@
 import json
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 # from scipy import stats
 
@@ -15,6 +16,7 @@ data = json.loads(res)
 
 attributes = ['program_rate', 'debug_rate', 'early_success_degree', 'finish_degree']
 ratio = []
+dataForGraph = []  # 存放各指标下服从与不服从正态的数据个数
 for choose in attributes:  # 依次计算每个指标
     caseIds = [x for x in data[choose].keys()]
     print("给定样本:")
@@ -78,8 +80,26 @@ for choose in attributes:  # 依次计算每个指标
         num_valid += 1
     print("有效占比:", num_valid, "/", num_all, "=", str((num_valid / num_all) * 100) + "%")
     ratio.append((num_valid / num_all) * 100)
+    dataForGraph.append([num_valid, num_all - num_valid])
 
 print()
 print("各指标下数据服从正态分布的比例：")
 for i in range(0, 4):
     print(attributes[i] + ": " + str(ratio[i]) + "%")
+
+# ----------绘制直方图----------
+# 这两行设置使得图中可以显示中文
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 这两行需要手动设置
+
+labels = ['program_rate', 'debug_rate', 'early_success_degree', 'finish_degree']
+
+X = np.array([1, 2, 3, 4])
+nd = np.array([i[0] for i in dataForGraph])
+not_nd = np.array([i[1] for i in dataForGraph])
+
+plt.bar(X, nd, width=0.4, bottom=not_nd, tick_label=labels, label='服从正态')
+plt.bar(X, not_nd, width=0.4, label='不服从正态')
+plt.title('四个指标下数据服从正态与不服从正态的数据情况')
+plt.legend()
+plt.show()

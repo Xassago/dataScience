@@ -14,15 +14,15 @@ INVALID = "*"
 UNDEFINED = "undefined"
 userData = INVALID
 type = INVALID
-typeList = {"0":"字符串","1":"线性表","2":"数组","3":"数字操作","4":"查找算法","5":"排序算法","6":"树结构","7":"图结构"}
+typeList = {"0": "字符串", "1": "线性表", "2": "数组", "3": "数字操作", "4": "查找算法", "5": "排序算法", "6": "树结构", "7": "图结构"}
 auto = True
 done = False
 
 # 选择自动还是手动添加userId和type
 instruc = input("input userId automatically?[yes/no] ")
-if instruc=="yes":
+if instruc == "yes":
     pass
-elif instruc=="no":
+elif instruc == "no":
     auto = False
 else:
     print("then we assume that you have answered yes")
@@ -47,7 +47,7 @@ else:
         else:
             break
 
-    if userData!=INVALID:
+    if userData != INVALID:
         while True:
             print(typeList)
             print("choose types by keys listed here(", end="")
@@ -63,7 +63,7 @@ else:
                 print("type not found, please input again:", end="")
             else:
                 break
-        if type!=INVALID:
+        if type != INVALID:
             userData["type"] = type
             done = True
 
@@ -74,8 +74,3 @@ if done:
     print("update demo.json succeeded")
 else:
     print("update demo.json failed")
-
-
-
-
-

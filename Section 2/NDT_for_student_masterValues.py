@@ -5,6 +5,8 @@
 """验证 masterValue.json 数据是否正态"""
 import json
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
 f = open('data/masterValue.json', encoding='utf-8')
 res = f.read()
@@ -12,6 +14,7 @@ data = json.loads(res)
 
 attributes = ['str', 'line', 'arr', 'find', 'num', 'sort', 'tree', 'gra']
 ratio = []
+dataForGraph = []  # 存放各指标下服从与不服从正态的数据个数
 for choose in attributes:  # 依次计算每个指标
     dataOfEachUser = data[choose]
     # print(choose + "类型题目下的数据：")
@@ -71,6 +74,7 @@ for choose in attributes:  # 依次计算每个指标
         num_valid += 1
     print("有效占比:", num_valid, "/", num_all, "=", str((num_valid / num_all) * 100) + "%")
     ratio.append((num_valid / num_all) * 100)
+    dataForGraph.append([num_valid, num_all - num_valid])
 
 print()
 print("各题型下学生对所做题掌握值服从正态分布的比例：")
@@ -80,3 +84,21 @@ for i in range(0, 8):
 print()
 avgOfRatio = sum(ratio) / len(ratio)
 print("八种题型下学生对所做题掌握值服从正态比例的均值：" + str(avgOfRatio) + "%")
+
+# ----------绘制直方图----------
+# 这两行设置使得图中可以显示中文
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 显示中文标签
+plt.rcParams['axes.unicode_minus'] = False  # 这两行需要手动设置
+
+# labels = ['str', 'line', 'arr', 'find', 'num', 'sort', 'tree', 'gra']
+labels = ['字符串', '线性表', '数组', '查找算法', '数字操作', '排序', '树', '图']
+
+X = np.array([1, 2, 3, 4, 5, 6, 7, 8])
+nd = np.array([i[0] for i in dataForGraph])
+not_nd = np.array([i[1] for i in dataForGraph])
+
+plt.bar(X, nd, width=0.4, bottom=not_nd, tick_label=labels, label='服从正态')
+plt.bar(X, not_nd, width=0.4, label='不服从正态')
+plt.title('学生在八种题型下的数据服从正态与不服从正态的数据情况')
+plt.legend()
+plt.show()
