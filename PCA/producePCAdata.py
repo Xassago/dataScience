@@ -1,6 +1,12 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+# 先跑calculate，再跑此文件，最后PCA
+# 此文件更新dataForPCA.json和furtherDataForPCA.json
+
 import json
 
-f = open('data/score.json', encoding='utf-8')
+f = open('data/masterValuesForCase.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 

@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+# 先跑calculate，再跑produce，最后此文件
+# 此文件进行降维计算
+
 import json
 import matplotlib.pyplot as plt
 import numpy as np
