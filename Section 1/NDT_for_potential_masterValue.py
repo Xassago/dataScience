@@ -14,9 +14,10 @@ f = open('data/intermediate_case_data.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 
+ndData = {'program_rate': [], 'debug_rate': [], 'early_success_degree': [], 'finish_degree': []}  # 服从正态的数据（For 正态曲线）
 attributes = ['program_rate', 'debug_rate', 'early_success_degree', 'finish_degree']
 ratio = []
-dataForGraph = []  # 存放各指标下服从与不服从正态的数据个数
+dataForGraph = []  # 存放各指标下服从与不服从正态的数据个数（For 直方图）
 for choose in attributes:  # 依次计算每个指标
     caseIds = [x for x in data[choose].keys()]
     print("给定样本:")
@@ -70,6 +71,7 @@ for choose in attributes:  # 依次计算每个指标
             u2 = abs(g2 - miu2) / var2
             if u1 < refuse_bound and u2 < refuse_bound:
                 u1u2_ofEachCase[caseId] = [u1, u2]
+                ndData[choose].append(case_data)
     print("各题偏度、峰度：")
     for key in pianDu_fengDu_ofEachCase.keys():  # 输出各题偏度峰度观察值
         print(key, pianDu_fengDu_ofEachCase[key])
@@ -86,6 +88,10 @@ print()
 print("各指标下数据服从正态分布的比例：")
 for i in range(0, 4):
     print(attributes[i] + ": " + str(ratio[i]) + "%")
+
+# ----------将服从正态的数据写入ndDataForGraphSection1文件中，用于画正态曲线图----------
+with open('data/ndDataForGraphSection1.json', 'w', encoding='utf-8') as w:
+    json.dump(ndData, w, ensure_ascii=False, indent=4)
 
 # ----------绘制直方图----------
 # 这两行设置使得图中可以显示中文

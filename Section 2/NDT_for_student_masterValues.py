@@ -12,9 +12,10 @@ f = open('data/masterValue.json', encoding='utf-8')
 res = f.read()
 data = json.loads(res)
 
+ndData = {'str': [], 'line': [], 'arr': [], 'find': [], 'num': [], 'sort': [], 'tree': [], 'gra': []}  # 满足正态的数据（For 正态曲线）
 attributes = ['str', 'line', 'arr', 'find', 'num', 'sort', 'tree', 'gra']
 ratio = []
-dataForGraph = []  # 存放各指标下服从与不服从正态的数据个数
+dataForGraph = []  # 存放各指标下服从与不服从正态的数据个数（For 直方图）
 for choose in attributes:  # 依次计算每个指标
     dataOfEachUser = data[choose]
     # print(choose + "类型题目下的数据：")
@@ -64,6 +65,7 @@ for choose in attributes:  # 依次计算每个指标
             u2 = abs(g2 - miu2) / var2
             if u1 < refuse_bound and u2 < refuse_bound:
                 u1u2_ofEachCase.append([u1, u2])
+                ndData[choose].append(item)
     # print("该题型数据中各user偏度、峰度：")
     # for i in pianDu_fengDu_ofEachCase:
     #     print(i)
@@ -84,6 +86,11 @@ for i in range(0, 8):
 print()
 avgOfRatio = sum(ratio) / len(ratio)
 print("八种题型下学生对所做题掌握值服从正态比例的均值：" + str(avgOfRatio) + "%")
+
+# ----------将服从正态的数据写入ndDataForGraphSection2文件中，用于画正态曲线图----------
+
+with open('data/ndDataForGraphSection2.json', 'w', encoding='utf-8') as w:
+    json.dump(ndData, w, ensure_ascii=False, indent=4)
 
 # ----------绘制直方图----------
 # 这两行设置使得图中可以显示中文
