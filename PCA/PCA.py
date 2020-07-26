@@ -31,6 +31,7 @@ pca = PCA(0.8)  # 保留原数据的百分之多少
 pca.fit(dataChart)  # 训练
 print("将数据降到了" + str(pca.n_components_) + "维")
 dataAfterPCA = pca.fit_transform(dataChart)  # 降维后的数据
+print("投影后各特征维度的方差比例如下：")
 print(list(pca.explained_variance_ratio_))  # 输出贡献率
 # 输出降维后的数据
 print("输出降维后的数据：")
