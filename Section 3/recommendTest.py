@@ -229,7 +229,7 @@ print("testIds not tried available in order:", tests_available[0])
 print("[duplicate]" if len(tests_available[1]) != len(set(tests_available[1])) else "[not duplicate]", end="")
 print("testIds tried available in order:", tests_available[1])
 all_tests_available = tests_available[0] + tests_available[1]
-print("nest recommended testId:", all_tests_available[0] if all_tests_available else "none")
+print("next recommended testId:", all_tests_available[0] if all_tests_available else "none")
 print()
 
 # 罗列已经做过的题目(去重后)
