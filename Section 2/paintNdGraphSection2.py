@@ -34,7 +34,8 @@ for key in data.keys():
 titleAndColor = {'str': ['字符串', 'green'], 'line': ['线性表', 'blue'], 'arr': ['数组', 'purple'],
                  'find': ['查找算法', 'red'], 'num': ['数字操作', 'black'], 'sort': ['排序算法', 'yellow'],
                  'tree': ['树', 'pink'], 'gra': ['图', 'orange']}
-path = 'E:/大二下/数据科学基础/大作业/dataScience/Section 2/graph/ndGraph'
+# path = 'E:/大二下/数据科学基础/大作业/dataScience/Section 2/graph/ndGraph'
+path = './graph/ndGraph'
 isNeedToSave = (len(os.listdir(path)) == 0)
 
 print("画图进度：")

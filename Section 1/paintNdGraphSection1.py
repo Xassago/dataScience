@@ -34,7 +34,8 @@ for key in data.keys():
     numOfData += len(data[key])
 titleAndColor = {'program_rate': 'blue', 'debug_rate': 'red',
                  'early_success_degree': 'orange', 'finish_degree': 'pink'}
-path = 'E:/大二下/数据科学基础/大作业/dataScience/Section 1/graph/ndGraph'
+# path = 'E:/大二下/数据科学基础/大作业/dataScience/Section 1/graph/ndGraph'
+path = './graph/ndGraph'
 isNeedToSave = (len(os.listdir(path)) == 0)
 
 print("画图进度：")
